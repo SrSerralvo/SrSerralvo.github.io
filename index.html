@@ -179,7 +179,7 @@ a.video-link{display:grid;place-items:center;aspect-ratio:16/9;max-width:100%;bo
     <a class="pcard" href="#not-my-war">
       <span class="label">UE 5.6 · C++ · Team project</span>
       <h3>Not My War</h3>
-      <p>Top-down stealth game. I built the inventory, fast travel, HUD and menus, and the input architecture behind them. Best Game from Training Centres, Iris Games Awards 2026.</p>
+      <p>Top-down stealth game. I built the inventory, the sewer fast-travel system, the HUD and menus, and the input architecture behind them. Best Game from Training Centres, Iris Games Awards 2026.</p>
       <span class="meta">Steam · Very Positive (91% of 137)</span>
     </a>
     <a class="pcard" href="#mercapolis">
@@ -209,7 +209,7 @@ a.video-link{display:grid;place-items:center;aspect-ratio:16/9;max-width:100%;bo
 
     <ul class="mech-nav" aria-label="Not My War mechanics">
       <li><a href="#nmw-inventory">Inventory</a></li>
-      <li><a href="#nmw-fast-travel">Fast travel</a></li>
+      <li><a href="#nmw-sewers">Sewer system</a></li>
       <li><a href="#nmw-hud">HUD, UI &amp; input</a></li>
     </ul>
 
@@ -309,13 +309,109 @@ a.video-link{display:grid;place-items:center;aspect-ratio:16/9;max-width:100%;bo
       </figure>
     </section>
 
-    <section class="mech" id="nmw-fast-travel">
+    <section class="mech" id="nmw-sewers">
       <div class="mech-head">
         <span class="label">Mechanic 2</span>
-        <h3>Fast travel menu</h3>
-        <p>The menu lists every destination the player has unlocked, previews its location on the map and asks for confirmation before travelling. It listens to the fast travel subsystem instead of polling it, and gets focus back when the player picks up a gamepad.</p>
+        <h3>Sewer system: teleporting through the manholes</h3>
+        <p>Manhole covers around the world are the game's fast travel. The player discovers and unlocks them while exploring, and opening one shows the sewer map. Confirming a destination teleports the player there: inside the same map or to another level, behind a loading screen so the jump is never visible, and onto an exit point that level designers place by tag. Unlocked manholes and the player's current one are saved with the game.</p>
       </div>
       <div class="video"><iframe src="https://www.youtube-nocookie.com/embed/3VOjivhNVOM" title="Gameplay video" loading="lazy" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen></iframe></div>
+      <div class="flow">
+        <div class="node"><span class="label">1 · Discover</span><code>FastTravelInteractableComponent</code><p>Each manhole registers itself and plays its unlock animation the first time.</p></div>
+        <div class="node"><span class="label">2 · Choose</span><code>UFastTravelWidget</code><p>Sewer map with every unlocked manhole, map location and preview image.</p></div>
+        <div class="node"><span class="label">3 · Confirm</span><code>UConfirmationModalWidget</code><p>"Do you want to travel to…?", focused for gamepad.</p></div>
+        <div class="node"><span class="label">4 · Teleport</span><code>UFastTravelSubsystem</code><p>Loading screen, level change if needed, pawn placed at the exit point.</p></div>
+      </div>
+      <figure class="code">
+        <figcaption><span class="label">Starting the teleport</span><span class="path">Gameplay/Systems/FastTravel/FastTravelSubsystem.cpp · abridged</span></figcaption>
+        <pre><code><span class="c">// Called when the player confirms a manhole on the sewer map.</span>
+<span class="k">void</span> <span class="t">UFastTravelSubsystem</span>::ExecuteTravel(<span class="t">AActor</span>* ActorToMove)
+{
+	<span class="k">if</span> (!CanTravel())
+	{
+		<span class="k">return</span>;
+	}
+
+	<span class="k">const</span> <span class="t">FFastTravelPointData</span> Target = GetSelected();
+
+	<span class="c">// With a transition request, always go through the loading screen,</span>
+	<span class="c">// even inside the same map, so the teleport is never visible.</span>
+	<span class="k">if</span> (Target.TransitionRequest.IsValid())
+	{
+		<span class="t">USceneTransitionSubsystem</span>* System =
+			GetGameInstance()-&gt;GetSubsystem&lt;<span class="t">USceneTransitionSubsystem</span>&gt;();
+
+		PendingTravelId   = SelectedId;
+		PendingLevel      = Target.Level; <span class="c">// may be the same level</span>
+		bTravelInProgress = <span class="k">true</span>;
+
+		System-&gt;RequestTransition(Target.TransitionRequest.Get());
+		<span class="k">return</span>; <span class="c">// the pawn is placed in OnPostLoadMap</span>
+	}
+
+	<span class="c">// Fallback without loading screen</span>
+	<span class="k">if</span> (IsSameLevel(Target))
+	{
+		<span class="k">if</span> (<span class="t">APawn</span>* Pawn = Cast&lt;<span class="t">APawn</span>&gt;(ActorToMove))
+		{
+			PlacePawnSafelyNear(GetWorld(), Pawn, <span class="t">FTransform</span>(Target.Location));
+		}
+		SetCurrentLocationId(SelectedId);
+		SelectedId = <span class="t">FFastTravelId</span>();
+	}
+	<span class="k">else</span>
+	{
+		<span class="t">UGameplayStatics</span>::OpenLevel(this, <span class="t">FName</span>(*Target.Level.GetAssetName()));
+		SelectedId = <span class="t">FFastTravelId</span>();
+	}
+}</code></pre>
+      </figure>
+      <figure class="code">
+        <figcaption><span class="label">Finishing it in the new level</span><span class="path">Gameplay/Systems/FastTravel/FastTravelSubsystem.cpp · abridged</span></figcaption>
+        <pre><code><span class="c">// The subsystem lives in the GameInstance, so it survives the level load</span>
+<span class="c">// and finishes the teleport once the new map exists.</span>
+<span class="k">void</span> <span class="t">UFastTravelSubsystem</span>::OnPostLoadMap(<span class="t">UWorld</span>* LoadedWorld)
+{
+	<span class="k">if</span> (!bTravelInProgress)
+	{
+		<span class="k">return</span>;
+	}
+
+	<span class="k">if</span> (<span class="t">APawn</span>* Pawn = <span class="t">UGameplayStatics</span>::GetPlayerPawn(this, <span class="n">0</span>))
+	{
+		<span class="k">if</span> (<span class="k">const</span> <span class="t">FFastTravelPointData</span>* P = Points.Find(PendingTravelId))
+		{
+			<span class="t">FTransform</span> Desired(P-&gt;Location);
+
+			<span class="c">// Designers can tag an exact exit point in the level</span>
+			<span class="k">const</span> <span class="t">USceneTransitionRequest</span>* Req = P-&gt;TransitionRequest.Get();
+			<span class="k">if</span> (Req &amp;&amp; Req-&gt;bHasTargetEntryPoint)
+			{
+				<span class="t">FTransform</span> ByTag;
+				<span class="k">if</span> (FindEntryPointByTag(LoadedWorld, Req-&gt;TargetEntryPointTag, ByTag))
+				{
+					Desired = ByTag;
+				}
+			}
+
+			PlacePawnSafelyNear(LoadedWorld, Pawn, Desired);
+		}
+	}
+
+	<span class="c">// Re-scan the manholes present in the new map and reset travel state</span>
+	PresentIds.Reset();
+	ScanWorldForComponents();
+	SetCurrentLocationId(PendingTravelId);
+
+	SelectedId        = <span class="t">FFastTravelId</span>();
+	PendingTravelId   = <span class="t">FFastTravelId</span>();
+	bTravelInProgress = <span class="k">false</span>;
+}</code></pre>
+      </figure>
+      <div class="section">
+        <h3>The sewer map UI</h3>
+        <p>The menu never polls the travel system. It subscribes to its state changes, rebuilds the list when a manhole is unlocked, swaps the map and preview images as the player moves through the list, and gives focus back to the first usable entry when the player switches between mouse and gamepad.</p>
+      </div>
       <figure class="code">
         <figcaption><span class="label">Reacting to the game, not polling it</span><span class="path">UI/GameMenus/FastTravel/FastTravelWidget.cpp · abridged</span></figcaption>
         <pre><code><span class="k">void</span> <span class="t">UFastTravelWidget</span>::NativeConstruct()
@@ -496,7 +592,7 @@ a.video-link{display:grid;place-items:center;aspect-ratio:16/9;max-width:100%;bo
 
     <div class="improve">
       <span class="label">What I would do differently</span>
-      <p><code>SetInputContext()</code> clears every mapping and applies a single context, so an overlay cannot add input on top of the current mode. Next time I would use a context stack with priorities. <code>AGameHUDSetUp</code> also grew into one class that knows every menu; I would split it into a generic menu stack (or CommonUI activatable widgets) where new screens register themselves. The fast travel previews load textures synchronously, which an async load would avoid.</p>
+      <p><code>SetInputContext()</code> clears every mapping and applies a single context, so an overlay cannot add input on top of the current mode. Next time I would use a context stack with priorities. <code>AGameHUDSetUp</code> also grew into one class that knows every menu; I would split it into a generic menu stack (or CommonUI activatable widgets) where new screens register themselves. The sewer map loads its preview textures synchronously, which an async load would avoid, and <code>PlacePawnSafelyNear()</code> teleports straight to the target instead of sweeping for a free spot within its search radius.</p>
     </div>
   </article>
 
