@@ -32,7 +32,27 @@
 
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font:16px/1.65 var(--f-body);margin:0}
-.wrap{max-width:60rem;margin:0 auto;padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px))}
+.layout{max-width:82rem;margin:0 auto;padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));display:grid;grid-template-columns:minmax(0,1fr);gap:0 3.5rem}
+main{min-width:0}
+.side{display:grid;gap:1.5rem;align-content:start;padding-block:2rem 1.5rem;border-bottom:1px solid var(--line)}
+.side .name{font:800 1.9rem/1.05 var(--f-display);letter-spacing:-.02em;text-wrap:balance}
+.side .role-line{color:var(--accent);font-weight:600}
+.status{display:inline-flex;align-items:center;gap:.5rem;font:500 .8rem/1.2 var(--f-mono);color:var(--muted)}
+.status::before{content:"";width:.55rem;height:.55rem;border-radius:50%;background:#3fb46d;box-shadow:0 0 0 3px color-mix(in srgb,#3fb46d 25%,transparent)}
+.contact{list-style:none;margin:0;padding:0;display:grid;gap:.85rem}
+.contact li{display:grid;gap:.15rem;min-width:0}
+.contact a,.contact span.val{color:var(--ink);text-decoration:none;font-weight:500;overflow-wrap:anywhere}
+.contact a:hover{color:var(--accent)}
+.contact .row{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
+.copy{font:600 .7rem/1 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;padding:.35rem .5rem;border:1px solid var(--line);border-radius:3px;background:transparent;color:var(--muted);cursor:pointer}
+.copy:hover{border-color:var(--accent);color:var(--accent)}
+.side nav{display:grid;gap:.4rem;border-top:1px solid var(--line);padding-top:1.25rem}
+.side nav a{color:var(--muted);text-decoration:none;font-weight:500}
+.side nav a:hover{color:var(--accent)}
+@media (min-width: 960px){
+  .layout{grid-template-columns:17rem minmax(0,1fr)}
+  .side{position:sticky;top:env(safe-area-inset-top, 0px);max-height:100vh;overflow-y:auto;padding-block:3rem;border-bottom:0;border-right:1px solid var(--line);padding-right:2rem}
+}
 a{color:var(--accent);text-underline-offset:3px}
 a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
 h1,h2,h3{font-family:var(--f-display);line-height:1.1;text-wrap:balance;margin:0}
@@ -48,7 +68,7 @@ p{margin:0;max-width:65ch}
 
 /* hero */
 .hero{display:grid;gap:1.5rem;padding-block:3.5rem 3rem;border-bottom:1px solid var(--line)}
-.hero h1{font-size:clamp(2.6rem,7vw,4.6rem);font-weight:800;letter-spacing:-.03em}
+.hero h1{font-size:clamp(2.4rem,5.5vw,4rem);font-weight:800;letter-spacing:-.03em}
 .hero h1 span{color:var(--accent)}
 .hero .lede{font-size:1.2rem;color:var(--muted)}
 .chips{display:flex;flex-wrap:wrap;gap:.5rem;list-style:none;padding:0;margin:0}
@@ -122,18 +142,29 @@ a.video-link{display:grid;place-items:center;aspect-ratio:16/9;max-width:100%;bo
 <body>
 
 
-<div class="wrap">
-  <header class="top">
-    <span class="mark">Miguel Ángel Serralvo</span>
+<div class="layout">
+  <aside class="side" aria-label="Contact">
+    <div style="display:grid;gap:.5rem">
+      <span class="name">Miguel Ángel Serralvo</span>
+      <span class="role-line">Gameplay &amp; UI Programmer</span>
+      <span class="status">Open to work · available now</span>
+    </div>
+    <ul class="contact">
+      <li><span class="label">Email</span><div class="row"><a href="mailto:migue.serralvo@gmail.com" id="email">migue.serralvo@gmail.com</a><button class="copy" type="button" data-copy="migue.serralvo@gmail.com">Copy</button></div></li>
+      <li><span class="label">Phone</span><a href="tel:+34639100901">+34 639 100 901</a></li>
+      <li><span class="label">LinkedIn</span><a href="https://www.linkedin.com/in/miguel-%C3%A1ngel-serralvo-mar%C3%ADn-b24077270/">Miguel Ángel Serralvo Marín</a></li>
+      <li><span class="label">GitHub</span><a href="https://github.com/SrSerralvo">github.com/SrSerralvo</a></li>
+      <li><span class="label">Location</span><span class="val">Málaga, Spain · open to relocate or remote</span></li>
+    </ul>
     <nav aria-label="Sections">
+      <a href="#top">About</a>
       <a href="#not-my-war">Not My War</a>
       <a href="#mercapolis">Mercapolis</a>
-      <a href="#contact">Contact</a>
     </nav>
-  </header>
+  </aside>
+  <main>
 
-  <section class="hero">
-    <span class="label">Gameplay &amp; UI Programmer</span>
+  <section class="hero" id="top">
     <h1>I turn game design into code that <span>ships</span>.</h1>
     <p class="lede">Unreal Engine 5 C++ and Unity C# programmer with two games shipped on Steam. Game Design degree and Master's in Game Programming at U-Tad, Madrid.</p>
     <ul class="chips" aria-label="Skills">
@@ -689,16 +720,21 @@ a.video-link{display:grid;place-items:center;aspect-ratio:16/9;max-width:100%;bo
     </section>
   </article>
 
-  <footer id="contact">
-    <h2>Let's talk</h2>
-    <p>Looking for gameplay, UI, Unreal or Unity programmer roles, or C++/C# roles in simulation and real-time 3D. Spain (Madrid preferred) or remote. Available now.</p>
-    <div class="cta">
-      <a class="btn primary" href="https://www.linkedin.com/in/miguel-%C3%A1ngel-serralvo-mar%C3%ADn-b24077270/">LinkedIn</a>
-      <a class="btn ghost" href="https://github.com/SrSerralvo">GitHub</a>
-    </div>
+  <footer>
     <p class="small">Code excerpts written by Miguel Ángel Serralvo. Not My War and Mercapolis, their art, audio and brands belong to their studios and U-Tad.</p>
   </footer>
+  </main>
 </div>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    var text=btn.getAttribute('data-copy');
+    function done(){btn.textContent='Copied';setTimeout(function(){btn.textContent='Copy';},1500);}
+    function fallback(){var r=document.createRange();r.selectNodeContents(document.getElementById('email'));var s=getSelection();s.removeAllRanges();s.addRange(r);}
+    try{navigator.clipboard.writeText(text).then(done,fallback);}catch(e){fallback();}
+  });
+});
+</script>
 
 </body>
 </html>
