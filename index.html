@@ -101,6 +101,22 @@ footer{border-top:1px solid var(--line);padding-block:2.5rem 3rem;display:grid;g
 footer h2{font-size:2rem}
 .small{font-size:.85rem;color:var(--muted)}
 @media (prefers-reduced-motion: no-preference){ .pcard,.btn{transition:border-color .15s, background-color .15s} }
+
+.title-row{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:1rem}
+.steam{display:inline-flex;align-items:center;gap:.65rem;padding:.8rem 1.2rem .8rem 1rem;border-radius:4px;background:var(--accent);color:var(--accent-ink);font:700 1rem/1.1 var(--f-display);text-decoration:none;box-shadow:0 0 0 0 var(--accent);white-space:nowrap}
+.steam svg{width:1.4rem;height:1.4rem;flex:none}
+.steam small{display:block;font:500 .72rem/1.2 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;opacity:.8}
+.steam:hover{box-shadow:0 0 0 4px color-mix(in srgb, var(--accent) 30%, transparent)}
+@media (prefers-reduced-motion: no-preference){ .steam{transition:box-shadow .15s} }
+.mech{display:grid;gap:1.25rem;padding-top:1.5rem;border-top:1px dashed var(--line)}
+.mech-head{display:grid;gap:.5rem}
+.mech-head h3{font-size:clamp(1.5rem,3.4vw,2rem)}
+.video{position:relative;aspect-ratio:16/9;max-width:100%;border-radius:4px;overflow:hidden;background:var(--code-bg)}
+.video iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+a.video-link{display:grid;place-items:center;aspect-ratio:16/9;max-width:100%;border-radius:4px;background:var(--surface);text-decoration:none;font-weight:600}
+.mech-nav{display:flex;flex-wrap:wrap;gap:.5rem;list-style:none;padding:0;margin:0}
+.mech-nav a{display:inline-block;font:500 .85rem/1 var(--f-mono);padding:.5rem .7rem;border:1px solid var(--line);border-radius:3px;text-decoration:none;color:var(--ink)}
+.mech-nav a:hover{border-color:var(--accent);color:var(--accent)}
 </style>
 </head>
 <body>
@@ -132,13 +148,13 @@ footer h2{font-size:2rem}
     <a class="pcard" href="#not-my-war">
       <span class="label">UE 5.6 · C++ · Team project</span>
       <h3>Not My War</h3>
-      <p>Top-down stealth game. I built the input architecture and the UI. Best Game from Training Centres, Iris Games Awards 2026.</p>
+      <p>Top-down stealth game. I built the inventory, fast travel, HUD and menus, and the input architecture behind them. Best Game from Training Centres, Iris Games Awards 2026.</p>
       <span class="meta">Steam · Very Positive (91% of 137)</span>
     </a>
     <a class="pcard" href="#mercapolis">
       <span class="label">Unity · C# · Sole programmer</span>
       <h3>Mercapolis</h3>
-      <p>Management tycoon. I programmed every system, the UI and the FMOD audio while coordinating a team of 5–6.</p>
+      <p>Management tycoon. Sole programmer: AI and gameplay, UI and menus, the construction system and FMOD audio, while coordinating a team of 6.</p>
       <span class="meta">Steam · 4 languages</span>
     </a>
   </section>
@@ -146,73 +162,203 @@ footer h2{font-size:2rem}
   <article class="case" id="not-my-war">
     <div class="case-head">
       <span class="label">Case study · 2025</span>
-      <h2>Not My War</h2>
-      <p>A 3D top-down stealth game made in Unreal Engine 5 by 24-Pack Studios as a U-Tad master's project. I was the Gameplay &amp; UI Programmer: I designed how input reaches the game and built the HUD and every menu.</p>
+      <div class="title-row">
+        <h2>Not My War</h2>
+        <a class="steam" href="https://store.steampowered.com/app/4034810"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="none" stroke="currentColor" stroke-width="2"/><path d="M10 7.5v9l7-4.5z" fill="currentColor"/></svg><span>Play free on Steam<small>Very Positive · 91%</small></span></a>
+      </div>
+      <p>A 3D top-down stealth game made in Unreal Engine 5 by 24-Pack Studios as a U-Tad master's project. I was the Gameplay &amp; UI Programmer. Everything below is my own C++, shown next to the mechanic it drives.</p>
     </div>
 
     <div class="facts">
       <div><span class="label">Released</span><strong>20 Nov 2025</strong><span class="small">Free on Steam</span></div>
       <div><span class="label">Reviews</span><strong>Very Positive</strong><span class="small">91% of 137</span></div>
       <div><span class="label">Award</span><strong>Best Game from Training Centres</strong><span class="small">Iris Games Awards 2026, Málaga</span></div>
+      <div><span class="label">Team</span><strong>30–40 people</strong><span class="small">8 programmers</span></div>
     </div>
 
+    <ul class="mech-nav" aria-label="Not My War mechanics">
+      <li><a href="#nmw-inventory">Inventory</a></li>
+      <li><a href="#nmw-fast-travel">Fast travel</a></li>
+      <li><a href="#nmw-hud">HUD, UI &amp; input</a></li>
+    </ul>
 
-    <div class="section">
-      <h3>What I owned</h3>
-      <ul class="role">
-        <li><strong>Input architecture.</strong> One player controller owns every Enhanced Input action and mapping context and re-broadcasts them as delegates, plus a layer that detects keyboard/mouse or gamepad, and which gamepad, at runtime.</li>
-        <li><strong>UI.</strong> The HUD and every in-game menu (inventory, pause, options, controls, crafting, fast travel, tutorials, modals), driven by one HUD class that handles focus, menu stacking and the switch to menu input.</li>
-        <li><strong>Generalist work.</strong> Debugging and optimisation across systems up to the Steam launch.</li>
-      </ul>
-      <p class="links"><a href="https://store.steampowered.com/app/4034810">Play it free on Steam</a></p>
-    </div>
+    <section class="mech" id="nmw-inventory">
+      <div class="mech-head">
+        <span class="label">Mechanic 1</span>
+        <h3>Grid inventory, playable with mouse or gamepad</h3>
+        <p>Items take up shaped spaces on a grid and can be rotated, dragged between containers or dropped. Mouse players drag and drop; gamepad players move a selector that carries the item. Both paths use the same placement rules, so they can never disagree about where an item fits.</p>
+      </div>
+      <div class="video"><iframe src="https://www.youtube-nocookie.com/embed/3VOjivhNVOM" title="Gameplay video" loading="lazy" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen></iframe></div>
+      <figure class="code">
+        <figcaption><span class="label">Selector that skips impossible tiles</span><span class="path">UI/GameMenus/Inventory/InventoryGridWidget.cpp · abridged</span></figcaption>
+        <pre><code><span class="c">// Gamepad navigation skips tiles where the carried item cannot land,</span>
+<span class="c">// using the same placement rules as mouse drag and drop.</span>
+<span class="t">FIntPoint</span>
+<span class="t">UInventoryGridWidget</span>::FindNextValidTileInDirection(<span class="t">FIntPoint</span> StartPosition,
+												   <span class="t">FIntPoint</span> Direction) <span class="k">const</span>
+{
+	<span class="t">FIntPoint</span> NextValidPos = StartPosition + Direction;
 
-    <div class="section">
-      <h3>Input: gameplay never reads a key</h3>
-      <p>Widgets and gameplay classes subscribe to what happened (interact, navigate, close menu), never to which key was pressed. A separate tracker watches the raw input stream so every button prompt in the game shows the right icon for the device in the player's hands.</p>
+	while (NextValidPos.X &gt;= <span class="n">0</span> &amp;&amp; NextValidPos.X &lt; GetMaxColumns()
+		   &amp;&amp; NextValidPos.Y &gt;= <span class="n">0</span> &amp;&amp; NextValidPos.Y &lt; GetMaxRows())
+	{
+		<span class="k">bool</span> bIsValidTile;
+		<span class="k">if</span> (SelectorOperation) <span class="c">// carrying an item</span>
+		{
+			<span class="k">const</span> <span class="t">EItemPlacementStatus</span> Status =
+				<span class="t">UInventoryFunctionLibrary</span>::EvaluateItemPlacement(
+					InventoryContainerComponent-&gt;Instance,
+					SelectorOperation-&gt;Item.Get(), NextValidPos,
+					SelectorOperation-&gt;Item-&gt;NormalizedRotation);
+
+			bIsValidTile =
+				(Status == <span class="t">EItemPlacementStatus</span>::CanPlace
+				 || Status == <span class="t">EItemPlacementStatus</span>::BlockedByOneItem
+				 || Status == <span class="t">EItemPlacementStatus</span>::BlockedByMultiple
+				 || Status == <span class="t">EItemPlacementStatus</span>::PartiallyOutOfBounds);
+		}
+		<span class="k">else</span>
+		{
+			bIsValidTile = <span class="t">UInventoryFunctionLibrary</span>::IsTileValid(
+				InventoryContainerComponent-&gt;InventoryData, NextValidPos);
+		}
+
+		<span class="k">if</span> (bIsValidTile)
+		{
+			<span class="k">return</span> NextValidPos;
+		}
+		NextValidPos += Direction;
+	}
+
+	<span class="k">return</span> <span class="t">FIntPoint</span>(-<span class="n">1</span>, -<span class="n">1</span>); <span class="c">// No valid tile found</span>
+}</code></pre>
+      </figure>
+      <figure class="code">
+        <figcaption><span class="label">Hold-to-repeat with acceleration</span><span class="path">UI/GameMenus/Inventory/InventoryGridWidget.cpp · abridged</span></figcaption>
+        <pre><code><span class="c">// Holding a direction on the stick or d-pad moves the selector once,</span>
+<span class="c">// waits, then repeats faster and faster down to a minimum interval.</span>
+<span class="k">void</span> <span class="t">UInventoryGridWidget</span>::StartMoveHold(<span class="t">FIntPoint</span> Direction)
+{
+	<span class="k">if</span> (Direction == <span class="t">FIntPoint</span>::ZeroValue)
+		<span class="k">return</span>;
+
+	MoveHoldState     = <span class="t">EMoveHoldState</span>::Active;
+	MoveDirection     = Direction;
+	CurrentRepeatRate = InitialRepeatRate;
+	bMoveHoldHasMoved = <span class="k">false</span>;
+
+	<span class="c">// Instant initial movement</span>
+	MoveSelector(Direction);
+
+	<span class="c">// Start the repetition with a delay</span>
+	GetWorld()-&gt;GetTimerManager().SetTimer(RepeatMoveTimerHandle, this,
+										   &amp;<span class="t">UInventoryGridWidget</span>::RepeatMove,
+										   InitialDelay, <span class="k">false</span>);
+}
+
+<span class="k">void</span> <span class="t">UInventoryGridWidget</span>::RepeatMove()
+{
+	<span class="k">if</span> (MoveDirection == <span class="t">FIntPoint</span>::ZeroValue
+		|| MoveHoldState != <span class="t">EMoveHoldState</span>::Active)
+		<span class="k">return</span>;
+
+	MoveSelector(MoveDirection);
+	bMoveHoldHasMoved = <span class="k">true</span>;
+
+	<span class="c">// Accel the move speed</span>
+	CurrentRepeatRate =
+		<span class="t">FMath</span>::Max(MinRepeatRate, CurrentRepeatRate - Acceleration);
+
+	<span class="c">// Reset the timer with a new speed</span>
+	GetWorld()-&gt;GetTimerManager().SetTimer(RepeatMoveTimerHandle, this,
+										   &amp;<span class="t">UInventoryGridWidget</span>::RepeatMove,
+										   CurrentRepeatRate, <span class="k">false</span>);
+}</code></pre>
+        <p class="why">The hold state can also be halted and handed over to another grid, so keeping the stick pushed carries the selector from the backpack into a chest without stopping.</p>
+      </figure>
+    </section>
+
+    <section class="mech" id="nmw-fast-travel">
+      <div class="mech-head">
+        <span class="label">Mechanic 2</span>
+        <h3>Fast travel menu</h3>
+        <p>The menu lists every destination the player has unlocked, previews its location on the map and asks for confirmation before travelling. It listens to the fast travel subsystem instead of polling it, and gets focus back when the player picks up a gamepad.</p>
+      </div>
+      <div class="video"><iframe src="https://www.youtube-nocookie.com/embed/Oe8Us50ZQ0U" title="Gameplay video" loading="lazy" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen></iframe></div>
+      <figure class="code">
+        <figcaption><span class="label">Reacting to the game, not polling it</span><span class="path">UI/GameMenus/FastTravel/FastTravelWidget.cpp · abridged</span></figcaption>
+        <pre><code><span class="k">void</span> <span class="t">UFastTravelWidget</span>::NativeConstruct()
+{
+	Super::NativeConstruct();
+
+	<span class="c">// Restore gamepad focus whenever the player switches device</span>
+	InputDeviceTracker = GetWorld()-&gt;GetSubsystem&lt;<span class="t">UInputDeviceTrackerSubsystem</span>&gt;();
+	<span class="k">if</span> (InputDeviceTracker.IsValid())
+	{
+		InputDeviceTracker-&gt;OnDeviceChanged.AddUObject(
+			this, &amp;<span class="t">UFastTravelWidget</span>::OnInputDeviceChanged);
+	}
+
+	<span class="c">// Rebuild the list when a destination is unlocked or selected</span>
+	<span class="k">if</span> (<span class="t">UFastTravelSubsystem</span>* Sub =
+			GetGameInstance()-&gt;GetSubsystem&lt;<span class="t">UFastTravelSubsystem</span>&gt;())
+	{
+		Sub-&gt;OnFastTravelStateChanged.AddDynamic(
+			this, &amp;<span class="t">UFastTravelWidget</span>::OnSubsystemStateChanged);
+	}
+
+	RefreshList();
+}
+
+<span class="k">void</span> <span class="t">UFastTravelWidget</span>::OnInputDeviceChanged(<span class="t">EInputDevice</span> NewDevice)
+{
+	FocusFirstUsableButton();
+}</code></pre>
+      </figure>
+      <figure class="code">
+        <figcaption><span class="label">Confirmation flow</span><span class="path">UI/GameMenus/FastTravel/FastTravelWidget.cpp · abridged</span></figcaption>
+        <pre><code><span class="k">void</span> <span class="t">UFastTravelWidget</span>::RequestTravel(<span class="t">FFastTravelId</span> DestinationId)
+{
+	<span class="t">UFastTravelSubsystem</span>* Sub =
+		GetGameInstance()-&gt;GetSubsystem&lt;<span class="t">UFastTravelSubsystem</span>&gt;();
+	Sub-&gt;SetSelected(DestinationId);
+	UpdateImageById(DestinationId);
+
+	<span class="c">// "Do you want to fast travel to " + destination + "?"</span>
+	<span class="c">// Left/Right come from string tables, so every language works.</span>
+	<span class="k">const</span> <span class="t">FText</span> ModalText = <span class="t">FText</span>::Format(<span class="t">INVTEXT</span>(<span class="s">"{0}{1}{2}"</span>), Left,
+		GetFastTravelDisplayName(UnlockedList, DestinationId), Right);
+
+	<span class="t">AGameHUDSetUp</span>* GameHUD = <span class="t">AMainController</span>::Get(this)-&gt;GetGameHUD();
+	GameHUD-&gt;ToggleFastTravelMenuWidget(<span class="t">FText</span>());
+	<span class="t">UConfirmationModalWidget</span>* Modal = GameHUD-&gt;ShowConfirmationModal(ModalText);
+
+	Modal-&gt;OnConfirmed.AddDynamic(this, &amp;<span class="t">UFastTravelWidget</span>::OnFastTravelConfirmed);
+	Modal-&gt;OnCancelled.AddDynamic(this, &amp;<span class="t">UFastTravelWidget</span>::OnFastTravelCancelled);
+
+	<span class="c">// Focus AFTER the HUD has switched to menu input,</span>
+	<span class="c">// or a gamepad player lands on nothing.</span>
+	Modal-&gt;FocusConfirmButton();
+}</code></pre>
+      </figure>
+    </section>
+
+    <section class="mech" id="nmw-hud">
+      <div class="mech-head">
+        <span class="label">Mechanic 3</span>
+        <h3>HUD, menus and the input behind them</h3>
+        <p><code>AGameHUDSetUp</code> creates every menu and is the only place that opens or closes them: it checks whether a menu may open, tracks focus, applies toggle cooldowns and swaps to menu input while one is open. Underneath, gameplay and UI never read a key. They subscribe to delegates from the player controller, and every button prompt shows the icon for the device in the player's hands.</p>
+      </div>
+      <div class="video"><iframe src="https://www.youtube-nocookie.com/embed/0riyP38K_Ts" title="Gameplay video" loading="lazy" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen></iframe></div>
       <div class="flow">
         <div class="node"><span class="label">1 · Raw input</span><code>FInputDeviceInputProcessor</code><p>Slate pre-processor. Sees every key and mouse move before any widget, consumes nothing.</p></div>
         <div class="node"><span class="label">2 · Device</span><code>UInputDeviceTrackerSubsystem</code><p>Keyboard/mouse or gamepad, and Xbox, PlayStation or Switch through Steam Input.</p></div>
         <div class="node"><span class="label">3 · Icons</span><code>UInputGlyphService</code><p>Maps logical actions to button icons from data assets set in Project Settings.</p></div>
-        <div class="node"><span class="label">4 · UI</span><code>Prompts, tutorials, controls tab</code><p>Subscribe to device changes and redraw their icons on the spot.</p></div>
+        <div class="node"><span class="label">4 · UI</span><code>Prompts, tutorials, menus</code><p>Subscribe to device changes and redraw icons or restore focus on the spot.</p></div>
       </div>
-      <p class="flow-note">In parallel, <code>AMainController</code> binds the Enhanced Input actions and re-broadcasts them as delegates (<code>OnInteract</code>, <code>OnNavigationMoveUp</code>, <code>OnCloseMenu</code>…) that gameplay and menus listen to.</p>
-    </div>
-
-    <figure class="code">
-      <figcaption><span class="label">Catching input before the UI</span><span class="path">Core/Systems/InputDeviceTracker/InputDeviceTrackerSubsystem.h</span></figcaption>
-      <pre><code><span class="c">// Slate input pre-processor: sees every key and mouse event</span>
-<span class="c">// before any widget does, and never consumes it.</span>
-<span class="k">class</span> <span class="t">FInputDeviceInputProcessor</span> : <span class="k">public</span> <span class="t">IInputProcessor</span>
-{
-<span class="k">public</span>:
-	<span class="k">virtual</span> <span class="k">bool</span> HandleKeyDownEvent(<span class="t">FSlateApplication</span>&amp; SlateApp,
-									<span class="k">const</span> <span class="t">FKeyEvent</span>&amp;   InKeyEvent) <span class="k">override</span>
-	{
-		<span class="k">if</span> (Subsystem)
-		{
-			Subsystem-&gt;HandleRawKeyInput(InKeyEvent.GetKey());
-		}
-		<span class="k">return</span> <span class="k">false</span>; <span class="c">// Don't consume the input</span>
-	}
-
-	<span class="k">virtual</span> <span class="k">bool</span> HandleMouseMoveEvent(<span class="t">FSlateApplication</span>&amp;   SlateApp,
-									  <span class="k">const</span> <span class="t">FPointerEvent</span>&amp; MouseEvent) <span class="k">override</span>
-	{
-		<span class="k">if</span> (Subsystem)
-		{
-			<span class="c">// Mouse movement indicates keyboard/mouse usage</span>
-			Subsystem-&gt;HandleRawKeyInput(<span class="t">EKeys</span>::MouseX);
-		}
-		<span class="k">return</span> <span class="k">false</span>;
-	}
-};</code></pre>
-      <p class="why">Hooking Slate instead of the player controller means device detection also works inside menus, during cinematics and while gameplay input is disabled.</p>
-    </figure>
-
-    <figure class="code">
-      <figcaption><span class="label">Detecting the gamepad family</span><span class="path">Core/Systems/InputDeviceTracker/InputDeviceTrackerSubsystem.cpp · abridged</span></figcaption>
-      <pre><code><span class="k">void</span> <span class="t">UInputDeviceTrackerSubsystem</span>::HandleRawKeyInput(<span class="k">const</span> <span class="t">FKey</span>&amp; Key)
+      <figure class="code">
+        <figcaption><span class="label">Detecting the gamepad family</span><span class="path">Core/Systems/InputDeviceTracker/InputDeviceTrackerSubsystem.cpp · abridged</span></figcaption>
+        <pre><code><span class="k">void</span> <span class="t">UInputDeviceTrackerSubsystem</span>::HandleRawKeyInput(<span class="k">const</span> <span class="t">FKey</span>&amp; Key)
 {
 	<span class="t">EInputDevice</span> NewDevice      = CurrentDevice;
 	<span class="t">EGamepadType</span> NewGamepadType = CurrentGamepadType;
@@ -240,12 +386,11 @@ footer h2{font-size:2rem}
 	}
 	<span class="c">// ...broadcasts OnDeviceChanged / OnGamepadTypeChanged when they differ</span>
 }</code></pre>
-      <p class="why">Steam Input can report a generic pad for the first frames after a controller connects. Retrying on a short timer is what stops the prompts flashing Xbox icons on a PlayStation pad.</p>
-    </figure>
-
-    <figure class="code">
-      <figcaption><span class="label">One icon lookup for the whole game</span><span class="path">Gameplay/Systems/InputGlyph/InputGlyphService.cpp</span></figcaption>
-      <pre><code><span class="c">// Any widget asks for a logical action ("Interact", "Dash")</span>
+        <p class="why">Steam Input can report a generic pad for the first frames after a controller connects. Retrying on a short timer stops the prompts flashing Xbox icons on a PlayStation pad.</p>
+      </figure>
+      <figure class="code">
+        <figcaption><span class="label">One icon lookup for the whole game</span><span class="path">Gameplay/Systems/InputGlyph/InputGlyphService.cpp</span></figcaption>
+        <pre><code><span class="c">// Any widget asks for a logical action ("Interact", "Dash")</span>
 <span class="c">// and gets the icon for whatever device the player is holding.</span>
 <span class="k">bool</span> <span class="t">UInputGlyphService</span>::GetBrushForLogical(<span class="t">FName</span>        LogicalName,
 											<span class="t">FSlateBrush</span>&amp; OutBrush)
@@ -261,39 +406,11 @@ footer h2{font-size:2rem}
 	}
 	<span class="k">return</span> <span class="k">false</span>;
 }</code></pre>
-      <p class="why">Supporting a new controller family means adding a glyph data asset in Project Settings. No widget code changes.</p>
-    </figure>
-
-    <div class="section">
-      <h3>UI: one owner for every menu</h3>
-      <p><code>AGameHUDSetUp</code> creates every menu widget and is the only place that opens or closes them. It checks whether a menu may open, tracks the focused widget, applies toggle cooldowns and swaps the controller to the menu-navigation context while a menu is open. Widgets get data through events, not per-frame polling. <code>UBaseWidget</code> and <code>UBaseButton</code> give every screen the same open/close flow, focus handling and hover animations, so mouse and gamepad navigation feel the same.</p>
-    </div>
-
-    <figure class="code">
-      <figcaption><span class="label">Switching between gameplay and menu input</span><span class="path">Gameplay/Character/MainController.cpp · abridged</span></figcaption>
-      <pre><code><span class="c">// Gameplay and menus use separate mapping contexts.</span>
-<span class="c">// Every mode switch goes through this one function.</span>
-<span class="k">void</span> <span class="t">AMainController</span>::SetInputContext(<span class="k">const</span> <span class="t">UInputMappingContext</span>* NewContext,
-									  <span class="k">const</span> <span class="k">int32</span>                 Priority)
-{
-	<span class="k">if</span> (!InputSubsystem || !NewContext)
-	{
-		LOG_ERROR(<span class="s">"SetInputContext failed - InputSubsystem=%s, NewContext=%s"</span>,
-				  InputSubsystem ? <span class="t">TEXT</span>(<span class="s">"Valid"</span>) : <span class="t">TEXT</span>(<span class="s">"NULL"</span>),
-				  NewContext ? <span class="t">TEXT</span>(<span class="s">"Valid"</span>) : <span class="t">TEXT</span>(<span class="s">"NULL"</span>));
-		<span class="k">return</span>;
-	}
-
-	InputSubsystem-&gt;ClearAllMappings();
-	InputSubsystem-&gt;AddMappingContext(NewContext, Priority);
-
-	IsMenuInputContextActive = (NewContext == MenuNavigationMappingContext);
-}</code></pre>
-    </figure>
-
-    <figure class="code">
-      <figcaption><span class="label">A widget that follows the player's device</span><span class="path">UI/Widgets/Tutorial/TutorialControlWidget.cpp · abridged</span></figcaption>
-      <pre><code><span class="k">void</span> <span class="t">UTutorialControlWidget</span>::NativeConstruct()
+        <p class="why">Supporting a new controller family means adding a glyph data asset in Project Settings. No widget code changes.</p>
+      </figure>
+      <figure class="code">
+        <figcaption><span class="label">A widget that follows the player's device</span><span class="path">UI/Widgets/Tutorial/TutorialControlWidget.cpp · abridged</span></figcaption>
+        <pre><code><span class="k">void</span> <span class="t">UTutorialControlWidget</span>::NativeConstruct()
 {
 	Super::NativeConstruct();
 	RefreshGlyph();
@@ -321,22 +438,255 @@ footer h2{font-size:2rem}
 	}
 	Super::NativeDestruct();
 }</code></pre>
-      <p class="why">The lambda captures a weak pointer and the handle is removed in <code>NativeDestruct</code>, so a widget closed mid-tutorial never gets a call after it is gone.</p>
-    </figure>
+        <p class="why">The lambda captures a weak pointer and the handle is removed in <code>NativeDestruct</code>, so a widget closed mid-tutorial never gets a call after it is gone.</p>
+      </figure>
+      <figure class="code">
+        <figcaption><span class="label">Switching between gameplay and menu input</span><span class="path">Gameplay/Character/MainController.cpp · abridged</span></figcaption>
+        <pre><code><span class="c">// Gameplay and menus use separate mapping contexts.</span>
+<span class="c">// Every mode switch goes through this one function.</span>
+<span class="k">void</span> <span class="t">AMainController</span>::SetInputContext(<span class="k">const</span> <span class="t">UInputMappingContext</span>* NewContext,
+									  <span class="k">const</span> <span class="k">int32</span>                 Priority)
+{
+	<span class="k">if</span> (!InputSubsystem || !NewContext)
+	{
+		LOG_ERROR(<span class="s">"SetInputContext failed - InputSubsystem=%s, NewContext=%s"</span>,
+				  InputSubsystem ? <span class="t">TEXT</span>(<span class="s">"Valid"</span>) : <span class="t">TEXT</span>(<span class="s">"NULL"</span>),
+				  NewContext ? <span class="t">TEXT</span>(<span class="s">"Valid"</span>) : <span class="t">TEXT</span>(<span class="s">"NULL"</span>));
+		<span class="k">return</span>;
+	}
+
+	InputSubsystem-&gt;ClearAllMappings();
+	InputSubsystem-&gt;AddMappingContext(NewContext, Priority);
+
+	IsMenuInputContextActive = (NewContext == MenuNavigationMappingContext);
+}</code></pre>
+      </figure>
+    </section>
 
     <div class="improve">
       <span class="label">What I would do differently</span>
-      <p><code>SetInputContext()</code> clears every mapping and applies a single context, so an overlay cannot add input on top of the current mode. Next time I would use a context stack with priorities. <code>AGameHUDSetUp</code> also grew into one class that knows every menu; I would split it into a generic menu stack (or CommonUI activatable widgets) where new screens register themselves.</p>
+      <p><code>SetInputContext()</code> clears every mapping and applies a single context, so an overlay cannot add input on top of the current mode. Next time I would use a context stack with priorities. <code>AGameHUDSetUp</code> also grew into one class that knows every menu; I would split it into a generic menu stack (or CommonUI activatable widgets) where new screens register themselves. The fast travel previews load textures synchronously, which an async load would avoid.</p>
     </div>
   </article>
 
   <article class="case" id="mercapolis">
     <div class="case-head">
       <span class="label">Case study · 2023–2024</span>
-      <h2>Mercapolis</h2>
-      <p>A management tycoon made in Unity by Espetos Studios as a U-Tad project and released free on Steam in October 2024, in 4 languages. I was the only programmer: all gameplay systems, the UI and dynamic audio with FMOD, while coordinating a team of 5–6.</p>
+      <div class="title-row">
+        <h2>Mercapolis</h2>
+        <a class="steam" href="https://store.steampowered.com/app/2930040"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="none" stroke="currentColor" stroke-width="2"/><path d="M10 7.5v9l7-4.5z" fill="currentColor"/></svg><span>Play free on Steam<small>Free · 4 languages</small></span></a>
+      </div>
+      <p>A management tycoon made in Unity by Espetos Studios as a U-Tad project and released free on Steam in October 2024, in 4 languages. I was the only programmer, and coordinated the team.</p>
     </div>
-    <p><a href="https://store.steampowered.com/app/2930040">Mercapolis on Steam</a></p>
+
+    <div class="facts">
+      <div><span class="label">Released</span><strong>24 Oct 2024</strong><span class="small">Free on Steam</span></div>
+      <div><span class="label">Languages</span><strong>4</strong><span class="small">Localised in Unity</span></div>
+      <div><span class="label">Team</span><strong>6 people</strong><span class="small">I was the sole programmer</span></div>
+      <div><span class="label">Engine</span><strong>Unity · C#</strong><span class="small">FMOD for audio</span></div>
+    </div>
+    <ul class="mech-nav" aria-label="Mercapolis mechanics">
+      <li><a href="#mp-ai">AI &amp; gameplay</a></li>
+      <li><a href="#mp-ui">UI &amp; menus</a></li>
+      <li><a href="#mp-build">Construction system</a></li>
+    </ul>
+    <section class="mech" id="mp-ai">
+      <div class="mech-head"><span class="label">Mechanic 1</span><h3>Customer and worker AI</h3>
+        <p>Customers walk in with a shopping list, browse the shelves and specialist stalls, queue and pay. Workers are hired with their own stats and run up to three tasks (cashier, cleaning, security, restocking…), and the game decides every frame which one each worker should be doing.</p>
+      </div>
+      <div class="video"><iframe src="https://www.youtube-nocookie.com/embed/jKtpjczKtzo" title="Gameplay video" loading="lazy" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen></iframe></div>
+      <figure class="code">
+        <figcaption><span class="label">Choosing a worker's task</span><span class="path">NPC/Workers/WorkerTaskManager.cs</span></figcaption>
+        <pre><code><span class="c">// Each worker has up to three task slots. Every frame the manager picks</span>
+<span class="c">// which one to run: an urgent (temporal) task beats the main job, and the</span>
+<span class="c">// sub-task only runs while the main job has nothing to do.</span>
+<span class="k">private</span> <span class="t">BaseTask</span> PriorityTask()
+{
+    <span class="k">if</span> (temporalTask) <span class="c">// Check for temporal</span>
+    {
+        temporalTask.havePriority = <span class="k">true</span>;
+        <span class="k">return</span> temporalTask;
+    }
+
+    <span class="k">if</span> (!temporalTask &amp;&amp; mainTask) <span class="c">// Check for maintask</span>
+    {
+        <span class="k">if</span> (!subTask)
+        {
+            mainTask.havePriority = <span class="k">true</span>;
+            <span class="k">return</span> mainTask;
+        }
+        <span class="k">if</span> (subTask &amp;&amp; mainTask.canDoTask)
+        {
+            mainTask.havePriority = <span class="k">true</span>;
+            subTask.havePriority = <span class="k">false</span>;
+            <span class="k">return</span> mainTask;
+        }
+        <span class="k">if</span> (subTask &amp;&amp; !mainTask.canDoTask)
+        {
+            mainTask.havePriority = <span class="k">true</span>;
+            subTask.havePriority = <span class="k">true</span>;
+            <span class="k">return</span> subTask;
+        }
+    }
+
+    <span class="k">if</span> (temporalTask || mainTask || !subTask) <span class="k">return</span> <span class="k">null</span>;
+
+    subTask.havePriority = <span class="k">true</span>;
+    <span class="k">return</span> subTask;
+}</code></pre>
+      </figure>
+      <figure class="code">
+        <figcaption><span class="label">Claiming work so workers don't collide</span><span class="path">Tasks/Cleaner/CleanerTask.cs · abridged</span></figcaption>
+        <pre><code><span class="c">// Cleaners look for the closest mess that no other worker has claimed,</span>
+<span class="c">// so two workers never walk to the same piece of trash.</span>
+<span class="k">private</span> <span class="t">Clean</span> GetObjectToClean()
+{
+    <span class="k">var</span> objects = <span class="k">new</span> <span class="t">List</span>&lt;<span class="t">GameObject</span>&gt;();
+    <span class="k">foreach</span> (<span class="k">var</span> obj <span class="k">in</span> <span class="t">GameManager</span>.instance.objectsToClean)
+    {
+        <span class="k">if</span> (!obj) <span class="k">continue</span>;
+        objects.Add(obj.gameObject);
+    }
+
+    <span class="k">foreach</span> (<span class="k">var</span> cleanObject <span class="k">in</span> <span class="t">GameManager</span>.instance.ReturnCloserObjects(objects, workerTaskManager.gameObject))
+    {
+        <span class="k">var</span> clean = cleanObject.GetComponent&lt;<span class="t">Clean</span>&gt;();
+        <span class="k">if</span> (clean.workerAssigned == <span class="k">null</span> || clean.workerAssigned == workerTaskManager)
+        {
+            <span class="c">// ...graffiti / trash specialisation filters...</span>
+            clean.workerAssigned = workerTaskManager;
+            <span class="k">return</span> clean;
+        }
+    }
+    <span class="k">return</span> <span class="k">null</span>;
+}</code></pre>
+      </figure>
+    </section>
+    <section class="mech" id="mp-ui">
+      <div class="mech-head"><span class="label">Mechanic 2</span><h3>UI and menus</h3>
+        <p>A management game lives in its menus: hiring workers from cards, assigning their tasks by drag and drop, buying stock in the central market, the end-of-day report and the newspaper with the town's events.</p>
+      </div>
+      <div class="video"><iframe src="https://www.youtube-nocookie.com/embed/011VbTiv14U" title="Gameplay video" loading="lazy" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen></iframe></div>
+      <figure class="code">
+        <figcaption><span class="label">Drag-and-drop task assignment</span><span class="path">UI/Tasks/TaskSlot.cs</span></figcaption>
+        <pre><code><span class="c">// Task cards are dragged onto a worker's slots. Dropping on an</span>
+<span class="c">// occupied slot swaps the two cards instead of rejecting the drop.</span>
+<span class="k">public</span> <span class="k">void</span> OnDrop(<span class="t">PointerEventData</span> eventData)
+{
+    <span class="t">Transform</span> parentAfterSwap;
+    <span class="t">GameObject</span> dropped = eventData.pointerDrag;
+    <span class="t">DraggableItem</span> draggableItem = dropped.GetComponent&lt;<span class="t">DraggableItem</span>&gt;();
+
+    <span class="k">if</span> (transform.childCount == <span class="n">0</span>)
+    {
+        draggableItem.parentAfterDrag = transform;
+    }
+    <span class="k">else</span>
+    {
+        parentAfterSwap = draggableItem.parentAfterDrag;
+        transform.GetChild(<span class="n">0</span>).SetParent(parentAfterSwap);
+        draggableItem.parentAfterDrag = transform;
+    }
+}</code></pre>
+      </figure>
+      <figure class="code">
+        <figcaption><span class="label">Market search</span><span class="path">UI/CentralMarket/SearchManager.cs · abridged</span></figcaption>
+        <pre><code><span class="c">// Live search in the central market: filters product slots by prefix</span>
+<span class="c">// as the player types.</span>
+<span class="k">public</span> <span class="k">void</span> Search()
+{
+    <span class="k">string</span> searchText = searchBar.GetComponent&lt;<span class="t">TMP_InputField</span>&gt;().text;
+    <span class="k">int</span> searchTextLength = searchText.Length;
+
+    <span class="k">foreach</span> (<span class="t">GameObject</span> product <span class="k">in</span> products)
+    {
+        <span class="k">string</span> productName = product.GetComponent&lt;<span class="t">MarketSlot</span>&gt;().nameText
+            .GetComponent&lt;<span class="t">TextMeshProUGUI</span>&gt;().text;
+
+        <span class="k">if</span> (productName.Length &gt;= searchTextLength)
+        {
+            product.SetActive(searchText.ToLower()
+                == productName.Substring(<span class="n">0</span>, searchTextLength).ToLower());
+        }
+    }
+}</code></pre>
+      </figure>
+    </section>
+    <section class="mech" id="mp-build">
+      <div class="mech-head"><span class="label">Mechanic 3</span><h3>Construction system</h3>
+        <p>The player furnishes and expands the supermarket on a grid: shelves are previewed in green or red, rotated, paid for, placed or sold back, and every placement is saved with the game.</p>
+      </div>
+      <div class="video"><iframe src="https://www.youtube-nocookie.com/embed/1W2-yHADxbo" title="Gameplay video" loading="lazy" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen></iframe></div>
+      <figure class="code">
+        <figcaption><span class="label">Build modes as states</span><span class="path">Grid/PlacementSystem.cs · PlacementState.cs · abridged</span></figcaption>
+        <pre><code><span class="c">// Building and selling share one input loop. Each mode is a state</span>
+<span class="c">// object, so adding a mode (move, paint...) never touches the loop.</span>
+<span class="k">public</span> <span class="k">interface</span> <span class="t">IBuildingState</span>
+{
+    <span class="k">void</span> EndState();
+    <span class="k">void</span> OnAction(<span class="t">Vector3Int</span> gridPosition);
+    <span class="k">void</span> UpdateState(<span class="t">Vector3Int</span> gridPosition);
+}
+
+<span class="k">public</span> <span class="k">void</span> StartPlacement(<span class="k">int</span> id)
+{
+    StopPlacement();
+    _buildingState = <span class="k">new</span> <span class="t">PlacementState</span>(id, grid, preview, database,
+                                        _floorData, _furnitureData, objectPlacer);
+    <span class="t">InputManager</span>.Instance.OnClicked += PlaceStructure;
+    <span class="t">InputManager</span>.Instance.OnExit    += StopPlacement;
+}
+
+<span class="k">public</span> <span class="k">void</span> StartRemoving()
+{
+    StopPlacement();
+    _buildingState = <span class="k">new</span> <span class="t">RemovingState</span>(grid, preview, database,
+                                       _floorData, _furnitureData, objectPlacer);
+    <span class="t">InputManager</span>.Instance.OnClicked += PlaceStructure;
+    <span class="t">InputManager</span>.Instance.OnExit    += StopPlacement;
+}
+
+<span class="k">private</span> <span class="k">void</span> Update()
+{
+    <span class="k">if</span> (_buildingState == <span class="k">null</span>) <span class="k">return</span>;
+
+    <span class="k">var</span> mousePosition = <span class="t">InputManager</span>.Instance.GetSelectedMapPosition();
+    _buildingState.UpdateState(grid.WorldToCell(mousePosition));
+}</code></pre>
+      </figure>
+      <figure class="code">
+        <figcaption><span class="label">Grid occupancy and placement rules</span><span class="path">Grid/GridData.cs · PlacementState.cs · abridged</span></figcaption>
+        <pre><code><span class="c">// Every cell an object covers points to the same PlacementData, so</span>
+<span class="c">// removing a 2x3 shelf from any of its cells frees all six.</span>
+<span class="k">public</span> <span class="k">void</span> AddObjectAt(<span class="t">Vector3Int</span> gridPosition, <span class="t">Vector2Int</span> objectSize, <span class="k">int</span> id, <span class="k">int</span> placedObjectIndex)
+{
+    <span class="t">List</span>&lt;<span class="t">Vector3Int</span>&gt; positionToOccupy = CalculatePositions(gridPosition, objectSize);
+    <span class="t">PlacementData</span> data = <span class="k">new</span> <span class="t">PlacementData</span>(positionToOccupy, id, placedObjectIndex);
+
+    <span class="k">foreach</span> (<span class="k">var</span> pos <span class="k">in</span> positionToOccupy)
+    {
+        <span class="k">if</span> (_placedObjects.ContainsKey(pos))
+            <span class="k">throw</span> <span class="k">new</span> <span class="t">Exception</span>(<span class="s">$"Dictionary already contains this cell position {pos}"</span>);
+        _placedObjects[pos] = data;
+    }
+}
+
+<span class="c">// Valid only if the player can afford it, the floor under it is real</span>
+<span class="c">// and none of its cells are taken.</span>
+<span class="k">private</span> <span class="k">bool</span> CheckPlacementValidity(<span class="t">Vector3Int</span> gridPosition, <span class="k">int</span> selectedObjectIndex, <span class="k">float</span> moneyCost)
+{
+    <span class="k">if</span> (moneyCost &gt; <span class="t">ShopAccounting</span>.instance.money)
+        <span class="k">return</span> <span class="k">false</span>;
+
+    <span class="t">GridData</span> selectedData = _database.objectData[selectedObjectIndex].id == <span class="n">0</span> ? _floorData : _furnitureData;
+
+    <span class="k">var</span> floorCheck = _previewSystem._previewObject.GetComponentInChildren&lt;<span class="t">CheckFloor</span>&gt;();
+    <span class="k">if</span> (floorCheck &amp;&amp; !floorCheck.CheckShelveFloor()) <span class="k">return</span> <span class="k">false</span>;
+
+    <span class="k">return</span> selectedData.CanPlaceObjectAt(gridPosition, _database.objectData[selectedObjectIndex].size);
+}</code></pre>
+      </figure>
+    </section>
   </article>
 
   <footer id="contact">
