@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Miguel Ángel Serralvo</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Gameplay & UI programmer (Unreal Engine 5 C++ / Unity C#) with two games shipped on Steam.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: one reading column; each project is a case study with facts rail, media, diagram and annotated code. Night-op stealth palette, flashlight amber accent. */
+:root{
+  --bg:#f3f4f1; --surface:#e6e8e3; --ink:#1b2027; --muted:#55606b; --line:#c9cdc6;
+  --accent:#b8640b; --accent-ink:#ffffff; --code-bg:#151a21; --code-fg:#d6dde6;
+  --tk-kw:#ffb454; --tk-ty:#7fc8f8; --tk-str:#a8d982; --tk-com:#7a8794; --tk-num:#f29e74; --tk-fn:#e6c07b;
+  --pending:#8a5a00; --pending-bg:#fff2cf;
+  --f-display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --f-body:"IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, Consolas, monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#0f1318; --surface:#171d24; --ink:#e7eaee; --muted:#93a0ad; --line:#28313b;
+  --accent:#f0a33a; --accent-ink:#1a1206; --code-bg:#0a0d11; --code-fg:#d6dde6;
+  --pending:#f5c76b; --pending-bg:#2b2210; color-scheme:dark; } }
+:root[data-theme="dark"]{
+  --bg:#0f1318; --surface:#171d24; --ink:#e7eaee; --muted:#93a0ad; --line:#28313b;
+  --accent:#f0a33a; --accent-ink:#1a1206; --code-bg:#0a0d11; --code-fg:#d6dde6;
+  --pending:#f5c76b; --pending-bg:#2b2210; color-scheme:dark; }
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:16px/1.65 var(--f-body);margin:0}
+.wrap{max-width:60rem;margin:0 auto;padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px))}
+a{color:var(--accent);text-underline-offset:3px}
+a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+h1,h2,h3{font-family:var(--f-display);line-height:1.1;text-wrap:balance;margin:0}
+p{margin:0;max-width:65ch}
+.label{font:600 .75rem/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+
+/* top bar */
+.top{display:flex;justify-content:space-between;align-items:center;gap:1rem;padding-block:1.25rem;flex-wrap:wrap}
+.top nav{display:flex;gap:1.25rem;flex-wrap:wrap}
+.top nav a{color:var(--ink);text-decoration:none;font-weight:500}
+.top nav a:hover{color:var(--accent)}
+.mark{font:700 1rem/1 var(--f-display);letter-spacing:-.01em}
+
+/* hero */
+.hero{display:grid;gap:1.5rem;padding-block:3.5rem 3rem;border-bottom:1px solid var(--line)}
+.hero h1{font-size:clamp(2.6rem,7vw,4.6rem);font-weight:800;letter-spacing:-.03em}
+.hero h1 span{color:var(--accent)}
+.hero .lede{font-size:1.2rem;color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:.5rem;list-style:none;padding:0;margin:0}
+.chips li{font:500 .85rem/1 var(--f-mono);padding:.5rem .7rem;border:1px solid var(--line);border-radius:3px}
+.cta{display:flex;gap:.75rem;flex-wrap:wrap}
+.btn{display:inline-block;padding:.7rem 1.1rem;border-radius:3px;font-weight:600;text-decoration:none;border:1px solid var(--accent)}
+.btn.primary{background:var(--accent);color:var(--accent-ink)}
+.btn.ghost{color:var(--accent)}
+
+/* project index */
+.index{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,24rem),1fr));gap:1rem;padding-block:2.5rem}
+.pcard{display:grid;align-content:start;gap:.6rem;padding:1.4rem;background:var(--surface);border-radius:4px;text-decoration:none;color:var(--ink);border:1px solid transparent}
+.pcard:hover{border-color:var(--accent)}
+.pcard h3{font-size:1.6rem}
+.pcard .meta{font:500 .85rem/1.4 var(--f-mono);color:var(--muted)}
+
+/* case study */
+.case{padding-block:3.5rem;border-top:1px solid var(--line);display:grid;grid-template-columns:minmax(0,1fr);gap:2.25rem}
+code{overflow-wrap:anywhere}
+.case-head{display:grid;gap:.8rem}
+.case-head h2{font-size:clamp(2.2rem,5vw,3.4rem);letter-spacing:-.02em}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,11rem),1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:4px;overflow:hidden}
+.facts div{background:var(--bg);padding:1rem;display:grid;gap:.35rem;align-content:start}
+.facts strong{font:700 1.15rem/1.2 var(--f-display)}
+.media{aspect-ratio:16/9;max-width:100%;border-radius:4px;background:var(--surface);border:1px dashed var(--line);display:grid;place-items:center;text-align:center;padding:1rem;color:var(--muted)}
+.section{display:grid;gap:1rem}
+.section h3{font-size:1.5rem}
+.role{display:grid;gap:.75rem;padding:0;margin:0;list-style:none}
+.role li{padding-left:1rem;border-left:2px solid var(--accent)}
+.pending{background:var(--pending-bg);color:var(--pending);font:600 .85em var(--f-mono);padding:.05rem .35rem;border-radius:3px}
+
+/* flow diagram */
+.flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,12rem),1fr));gap:.75rem;counter-reset:step}
+.node{background:var(--surface);border-radius:4px;padding:1rem;display:grid;gap:.4rem;align-content:start;position:relative}
+.node code{font:600 .82rem/1.3 var(--f-mono);color:var(--accent);word-break:break-word}
+.node p{font-size:.92rem;color:var(--muted)}
+.flow-note{font-size:.92rem;color:var(--muted)}
+
+/* code */
+figure.code{margin:0;display:grid;gap:.5rem;min-width:0}
+figure.code figcaption{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;align-items:baseline}
+figure.code figcaption .path{font:500 .8rem/1.3 var(--f-mono);color:var(--muted);word-break:break-all}
+.why{font-size:.95rem}
+pre{margin:0;background:var(--code-bg);color:var(--code-fg);border-radius:4px;padding:1.1rem 1.2rem;overflow-x:auto;font:400 .82rem/1.6 var(--f-mono);tab-size:4}
+pre .k{color:var(--tk-kw)} pre .t{color:var(--tk-ty)} pre .s{color:var(--tk-str)} pre .c{color:var(--tk-com);font-style:italic} pre .n{color:var(--tk-num)}
+.improve{background:var(--surface);border-radius:4px;padding:1.25rem 1.4rem;display:grid;gap:.6rem}
+
+/* footer */
+footer{border-top:1px solid var(--line);padding-block:2.5rem 3rem;display:grid;gap:1rem}
+footer h2{font-size:2rem}
+.small{font-size:.85rem;color:var(--muted)}
+@media (prefers-reduced-motion: no-preference){ .pcard,.btn{transition:border-color .15s, background-color .15s} }
+</style>
+</head>
+<body>
+
+
+<div class="wrap">
+  <header class="top">
+    <span class="mark">Miguel Ángel Serralvo</span>
+    <nav aria-label="Sections">
+      <a href="#not-my-war">Not My War</a>
+      <a href="#mercapolis">Mercapolis</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <span class="label">Gameplay &amp; UI Programmer</span>
+    <h1>I build the systems players <span>touch</span>: input, UI and gameplay.</h1>
+    <p class="lede">Unreal Engine 5 C++ and Unity C# programmer with two games shipped on Steam. Game Design degree and Master's in Game Programming at U-Tad, Madrid.</p>
+    <ul class="chips" aria-label="Skills">
+      <li>UE5 C++</li><li>Blueprint</li><li>Enhanced Input</li><li>UMG / Slate</li><li>Unity C#</li><li>FMOD</li><li>Git</li>
+    </ul>
+    <div class="cta">
+      <a class="btn primary" href="#not-my-war">See the code</a>
+    </div>
+  </section>
+
+  <section class="index" aria-label="Projects">
+    <a class="pcard" href="#not-my-war">
+      <span class="label">UE 5.6 · C++ · Team project</span>
+      <h3>Not My War</h3>
+      <p>Top-down stealth game. I built the input architecture and the UI. Best Game from Training Centres, Iris Games Awards 2026.</p>
+      <span class="meta">Steam · Very Positive (91% of 137)</span>
+    </a>
+    <a class="pcard" href="#mercapolis">
+      <span class="label">Unity · C# · Sole programmer</span>
+      <h3>Mercapolis</h3>
+      <p>Management tycoon. I programmed every system, the UI and the FMOD audio while coordinating a team of 5–6.</p>
+      <span class="meta">Steam · 4 languages</span>
+    </a>
+  </section>
+
+  <article class="case" id="not-my-war">
+    <div class="case-head">
+      <span class="label">Case study · 2025</span>
+      <h2>Not My War</h2>
+      <p>A 3D top-down stealth game made in Unreal Engine 5 by 24-Pack Studios as a U-Tad master's project. I was the Gameplay &amp; UI Programmer: I designed how input reaches the game and built the HUD and every menu.</p>
+    </div>
+
+    <div class="facts">
+      <div><span class="label">Released</span><strong>20 Nov 2025</strong><span class="small">Free on Steam</span></div>
+      <div><span class="label">Reviews</span><strong>Very Positive</strong><span class="small">91% of 137</span></div>
+      <div><span class="label">Award</span><strong>Best Game from Training Centres</strong><span class="small">Iris Games Awards 2026, Málaga</span></div>
+    </div>
+
+
+    <div class="section">
+      <h3>What I owned</h3>
+      <ul class="role">
+        <li><strong>Input architecture.</strong> One player controller owns every Enhanced Input action and mapping context and re-broadcasts them as delegates, plus a layer that detects keyboard/mouse or gamepad, and which gamepad, at runtime.</li>
+        <li><strong>UI.</strong> The HUD and every in-game menu (inventory, pause, options, controls, crafting, fast travel, tutorials, modals), driven by one HUD class that handles focus, menu stacking and the switch to menu input.</li>
+        <li><strong>Generalist work.</strong> Debugging and optimisation across systems up to the Steam launch.</li>
+      </ul>
+      <p class="links"><a href="https://store.steampowered.com/app/4034810">Play it free on Steam</a></p>
+    </div>
+
+    <div class="section">
+      <h3>Input: gameplay never reads a key</h3>
+      <p>Widgets and gameplay classes subscribe to what happened (interact, navigate, close menu), never to which key was pressed. A separate tracker watches the raw input stream so every button prompt in the game shows the right icon for the device in the player's hands.</p>
+      <div class="flow">
+        <div class="node"><span class="label">1 · Raw input</span><code>FInputDeviceInputProcessor</code><p>Slate pre-processor. Sees every key and mouse move before any widget, consumes nothing.</p></div>
+        <div class="node"><span class="label">2 · Device</span><code>UInputDeviceTrackerSubsystem</code><p>Keyboard/mouse or gamepad, and Xbox, PlayStation or Switch through Steam Input.</p></div>
+        <div class="node"><span class="label">3 · Icons</span><code>UInputGlyphService</code><p>Maps logical actions to button icons from data assets set in Project Settings.</p></div>
+        <div class="node"><span class="label">4 · UI</span><code>Prompts, tutorials, controls tab</code><p>Subscribe to device changes and redraw their icons on the spot.</p></div>
+      </div>
+      <p class="flow-note">In parallel, <code>AMainController</code> binds the Enhanced Input actions and re-broadcasts them as delegates (<code>OnInteract</code>, <code>OnNavigationMoveUp</code>, <code>OnCloseMenu</code>…) that gameplay and menus listen to.</p>
+    </div>
+
+    <figure class="code">
+      <figcaption><span class="label">Catching input before the UI</span><span class="path">Core/Systems/InputDeviceTracker/InputDeviceTrackerSubsystem.h</span></figcaption>
+      <pre><code><span class="c">// Slate input pre-processor: sees every key and mouse event</span>
+<span class="c">// before any widget does, and never consumes it.</span>
+<span class="k">class</span> <span class="t">FInputDeviceInputProcessor</span> : <span class="k">public</span> <span class="t">IInputProcessor</span>
+{
+<span class="k">public</span>:
+	<span class="k">virtual</span> <span class="k">bool</span> HandleKeyDownEvent(<span class="t">FSlateApplication</span>&amp; SlateApp,
+									<span class="k">const</span> <span class="t">FKeyEvent</span>&amp;   InKeyEvent) <span class="k">override</span>
+	{
+		<span class="k">if</span> (Subsystem)
+		{
+			Subsystem-&gt;HandleRawKeyInput(InKeyEvent.GetKey());
+		}
+		<span class="k">return</span> <span class="k">false</span>; <span class="c">// Don't consume the input</span>
+	}
+
+	<span class="k">virtual</span> <span class="k">bool</span> HandleMouseMoveEvent(<span class="t">FSlateApplication</span>&amp;   SlateApp,
+									  <span class="k">const</span> <span class="t">FPointerEvent</span>&amp; MouseEvent) <span class="k">override</span>
+	{
+		<span class="k">if</span> (Subsystem)
+		{
+			<span class="c">// Mouse movement indicates keyboard/mouse usage</span>
+			Subsystem-&gt;HandleRawKeyInput(<span class="t">EKeys</span>::MouseX);
+		}
+		<span class="k">return</span> <span class="k">false</span>;
+	}
+};</code></pre>
+      <p class="why">Hooking Slate instead of the player controller means device detection also works inside menus, during cinematics and while gameplay input is disabled.</p>
+    </figure>
+
+    <figure class="code">
+      <figcaption><span class="label">Detecting the gamepad family</span><span class="path">Core/Systems/InputDeviceTracker/InputDeviceTrackerSubsystem.cpp · abridged</span></figcaption>
+      <pre><code><span class="k">void</span> <span class="t">UInputDeviceTrackerSubsystem</span>::HandleRawKeyInput(<span class="k">const</span> <span class="t">FKey</span>&amp; Key)
+{
+	<span class="t">EInputDevice</span> NewDevice      = CurrentDevice;
+	<span class="t">EGamepadType</span> NewGamepadType = CurrentGamepadType;
+
+	<span class="k">if</span> (Key.IsGamepadKey())
+	{
+		NewDevice      = <span class="t">EInputDevice</span>::Gamepad;
+		NewGamepadType = DetectGamepadType(); <span class="c">// Steam Input: Xbox / PS / Switch</span>
+
+		<span class="c">// Steam can report "Generic" for a few frames after a pad connects,</span>
+		<span class="c">// so retry every 50 ms until the real type shows up.</span>
+		<span class="k">if</span> (NewDevice != CurrentDevice
+			&amp;&amp; NewGamepadType == <span class="t">EGamepadType</span>::Generic)
+		{
+			GetWorld()-&gt;GetTimerManager().SetTimer(
+				InitialDetectionRetryHandle, this,
+				&amp;<span class="t">UInputDeviceTrackerSubsystem</span>::RetryGamepadDetection,
+				<span class="n">0.05f</span>, /*bLoop*/ <span class="k">true</span>);
+		}
+	}
+	<span class="k">else</span>
+	{
+		NewDevice      = <span class="t">EInputDevice</span>::KeyboardMouse;
+		NewGamepadType = <span class="t">EGamepadType</span>::None;
+	}
+	<span class="c">// ...broadcasts OnDeviceChanged / OnGamepadTypeChanged when they differ</span>
+}</code></pre>
+      <p class="why">Steam Input can report a generic pad for the first frames after a controller connects. Retrying on a short timer is what stops the prompts flashing Xbox icons on a PlayStation pad.</p>
+    </figure>
+
+    <figure class="code">
+      <figcaption><span class="label">One icon lookup for the whole game</span><span class="path">Gameplay/Systems/InputGlyph/InputGlyphService.cpp</span></figcaption>
+      <pre><code><span class="c">// Any widget asks for a logical action ("Interact", "Dash")</span>
+<span class="c">// and gets the icon for whatever device the player is holding.</span>
+<span class="k">bool</span> <span class="t">UInputGlyphService</span>::GetBrushForLogical(<span class="t">FName</span>        LogicalName,
+											<span class="t">FSlateBrush</span>&amp; OutBrush)
+{
+	<span class="k">if</span> (<span class="t">UInputGlyphSet</span>* Set = GetActiveSet()) <span class="c">// keyboard, Xbox, PS, Switch...</span>
+	{
+		<span class="t">UTexture2D</span>* Tex = <span class="k">nullptr</span>;
+		<span class="k">if</span> (Set-&gt;GetTextureForLogical(LogicalName, Tex) &amp;&amp; Tex)
+		{
+			MakeBrush(Tex, OutBrush);
+			<span class="k">return</span> <span class="k">true</span>;
+		}
+	}
+	<span class="k">return</span> <span class="k">false</span>;
+}</code></pre>
+      <p class="why">Supporting a new controller family means adding a glyph data asset in Project Settings. No widget code changes.</p>
+    </figure>
+
+    <div class="section">
+      <h3>UI: one owner for every menu</h3>
+      <p><code>AGameHUDSetUp</code> creates every menu widget and is the only place that opens or closes them. It checks whether a menu may open, tracks the focused widget, applies toggle cooldowns and swaps the controller to the menu-navigation context while a menu is open. Widgets get data through events, not per-frame polling. <code>UBaseWidget</code> and <code>UBaseButton</code> give every screen the same open/close flow, focus handling and hover animations, so mouse and gamepad navigation feel the same.</p>
+    </div>
+
+    <figure class="code">
+      <figcaption><span class="label">Switching between gameplay and menu input</span><span class="path">Gameplay/Character/MainController.cpp · abridged</span></figcaption>
+      <pre><code><span class="c">// Gameplay and menus use separate mapping contexts.</span>
+<span class="c">// Every mode switch goes through this one function.</span>
+<span class="k">void</span> <span class="t">AMainController</span>::SetInputContext(<span class="k">const</span> <span class="t">UInputMappingContext</span>* NewContext,
+									  <span class="k">const</span> <span class="k">int32</span>                 Priority)
+{
+	<span class="k">if</span> (!InputSubsystem || !NewContext)
+	{
+		LOG_ERROR(<span class="s">"SetInputContext failed - InputSubsystem=%s, NewContext=%s"</span>,
+				  InputSubsystem ? <span class="t">TEXT</span>(<span class="s">"Valid"</span>) : <span class="t">TEXT</span>(<span class="s">"NULL"</span>),
+				  NewContext ? <span class="t">TEXT</span>(<span class="s">"Valid"</span>) : <span class="t">TEXT</span>(<span class="s">"NULL"</span>));
+		<span class="k">return</span>;
+	}
+
+	InputSubsystem-&gt;ClearAllMappings();
+	InputSubsystem-&gt;AddMappingContext(NewContext, Priority);
+
+	IsMenuInputContextActive = (NewContext == MenuNavigationMappingContext);
+}</code></pre>
+    </figure>
+
+    <figure class="code">
+      <figcaption><span class="label">A widget that follows the player's device</span><span class="path">UI/Widgets/Tutorial/TutorialControlWidget.cpp · abridged</span></figcaption>
+      <pre><code><span class="k">void</span> <span class="t">UTutorialControlWidget</span>::NativeConstruct()
+{
+	Super::NativeConstruct();
+	RefreshGlyph();
+
+	<span class="c">// Redraw the button icon the moment the player switches device.</span>
+	<span class="c">// Weak pointer: the widget can be destroyed before the service.</span>
+	<span class="k">if</span> (<span class="t">UInputGlyphService</span>* Svc = GetWorld()-&gt;GetSubsystem&lt;<span class="t">UInputGlyphService</span>&gt;())
+	{
+		<span class="k">auto</span> Refresh = [WeakThis = <span class="t">TWeakObjectPtr</span>&lt;<span class="t">UTutorialControlWidget</span>&gt;(this)](<span class="t">EInputDevice</span>)
+		{
+			<span class="k">if</span> (WeakThis.IsValid())
+			{
+				WeakThis-&gt;RefreshGlyph();
+			}
+		};
+		GlyphChangedHandle = Svc-&gt;OnGlyphDeviceChanged.AddLambda(Refresh);
+	}
+}
+
+<span class="k">void</span> <span class="t">UTutorialControlWidget</span>::NativeDestruct()
+{
+	<span class="k">if</span> (<span class="t">UInputGlyphService</span>* Svc = GetWorld()-&gt;GetSubsystem&lt;<span class="t">UInputGlyphService</span>&gt;())
+	{
+		Svc-&gt;OnGlyphDeviceChanged.Remove(GlyphChangedHandle);
+	}
+	Super::NativeDestruct();
+}</code></pre>
+      <p class="why">The lambda captures a weak pointer and the handle is removed in <code>NativeDestruct</code>, so a widget closed mid-tutorial never gets a call after it is gone.</p>
+    </figure>
+
+    <div class="improve">
+      <span class="label">What I would do differently</span>
+      <p><code>SetInputContext()</code> clears every mapping and applies a single context, so an overlay cannot add input on top of the current mode. Next time I would use a context stack with priorities. <code>AGameHUDSetUp</code> also grew into one class that knows every menu; I would split it into a generic menu stack (or CommonUI activatable widgets) where new screens register themselves.</p>
+    </div>
+  </article>
+
+  <article class="case" id="mercapolis">
+    <div class="case-head">
+      <span class="label">Case study · 2023–2024</span>
+      <h2>Mercapolis</h2>
+      <p>A management tycoon made in Unity by Espetos Studios as a U-Tad project and released free on Steam in October 2024, in 4 languages. I was the only programmer: all gameplay systems, the UI and dynamic audio with FMOD, while coordinating a team of 5–6.</p>
+    </div>
+    <p><a href="https://store.steampowered.com/app/2930040">Mercapolis on Steam</a></p>
+  </article>
+
+  <footer id="contact">
+    <h2>Let's talk</h2>
+    <p>Looking for gameplay, UI, Unreal or Unity programmer roles, or C++/C# roles in simulation and real-time 3D. Spain (Madrid preferred) or remote. Available now.</p>
+    <div class="cta">
+      <a class="btn primary" href="https://www.linkedin.com/in/miguel-%C3%A1ngel-serralvo-mar%C3%ADn-b24077270/">LinkedIn</a>
+      <a class="btn ghost" href="https://github.com/SrSerralvo">GitHub</a>
+    </div>
+    <p class="small">Code excerpts written by Miguel Ángel Serralvo. Not My War and Mercapolis, their art, audio and brands belong to their studios and U-Tad.</p>
+  </footer>
+</div>
+
+</body>
+</html>
